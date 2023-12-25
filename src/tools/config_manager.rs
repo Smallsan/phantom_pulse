@@ -1,11 +1,13 @@
-use std::{fs::{File, self}, io::Read};
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
+use std::{
+    fs::{self, File},
+    io::Read,
+};
 
 #[derive(Serialize, Deserialize)]
 struct Keys {
     discord_api_key: String,
 }
-
 
 pub fn fetch_key() -> String {
     create_directory("config/keys.json");
@@ -21,7 +23,6 @@ pub fn fetch_key() -> String {
 
     return keys.discord_api_key;
 }
-
 
 pub fn create_directory(directory_name: &str) {
     if fs::metadata(directory_name).is_ok() {
