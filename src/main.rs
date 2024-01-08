@@ -10,7 +10,7 @@ use serenity::model::event::ResumedEvent;
 use serenity::model::gateway::{GatewayIntents, Ready};
 use serenity::{async_trait, Client};
 
-use sysinfo::System;
+use sysinfo::{Components, Cpu, Disks, Networks, System};
 use tracing::error;
 
 mod tools;
@@ -21,16 +21,20 @@ use tools::config_manager::fetch_key;
 mod commands;
 use commands::admin_commands::*;
 
+
 pub struct ShardManagerContainer;
 
 impl TypeMapKey for ShardManagerContainer {
     type Value = Arc<Mutex<ShardManager>>;
 }
 
-pub struct SystemContainer;
+pub struct MachineInfoContainer {
+    system: System,
+    disks: Disks,
+}
 
-impl TypeMapKey for SystemContainer {
-    type Value = Arc<Mutex<System>>;
+impl TypeMapKey for MachineInfoContainer {
+    type Value = Arc<Mutex<MachineInfoContainer>>;
 }
 
 #[group]
@@ -79,10 +83,15 @@ async fn main() {
         .await
         .expect("Err creating client");
 
+    let system_container = MachineInfoContainer{
+        system: System::new_all(),
+        disks: Disks::new_with_refreshed_list(),
+    };
+
     {
         let mut data = client.data.write().await;
         data.insert::<ShardManagerContainer>(client.shard_manager.clone());
-        data.insert::<SystemContainer>(Arc::new(Mutex::new(System::new_all())));
+        data.insert::<MachineInfoContainer>(Arc::new(Mutex::new(system_container)));
     }
 
     let shard_manager = client.shard_manager.clone();
