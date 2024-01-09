@@ -1,3 +1,3 @@
 pub mod sysinfo_command;
-pub mod command_helper;
+pub mod uptime_command;
 pub mod usage_command;

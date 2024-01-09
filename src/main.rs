@@ -21,7 +21,6 @@ use tools::config_manager::fetch_key;
 mod commands;
 use commands::admin_commands::*;
 
-
 pub struct ShardManagerContainer;
 
 impl TypeMapKey for ShardManagerContainer {
@@ -83,7 +82,7 @@ async fn main() {
         .await
         .expect("Err creating client");
 
-    let system_container = MachineInfoContainer{
+    let system_container = MachineInfoContainer {
         system: System::new_all(),
         disks: Disks::new_with_refreshed_list(),
     };

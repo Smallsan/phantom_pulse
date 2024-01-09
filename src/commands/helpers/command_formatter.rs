@@ -1,3 +1,18 @@
+use serenity::{builder::CreateEmbed, utils::Colour};
+
+pub async fn vector_to_embed(desc: Vec<String>, title: String) -> CreateEmbed {
+    let mut message_embed = CreateEmbed::default();
+
+    let formatted_desc = desc.join("\n");
+
+    message_embed
+        .title(title)
+        .description(formatted_desc)
+        .colour(Colour::DARK_GREY);
+
+    return message_embed;
+}
+
 pub fn format_uptime(total_seconds: u64) -> String {
     let days = total_seconds / (24 * 60 * 60);
 
